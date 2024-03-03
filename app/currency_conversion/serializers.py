@@ -9,3 +9,9 @@ class CurrencyConversionSerializer(serializers.Serializer):
     from_currency = serializers.CharField(max_length=3, required=True)
     to_currency = serializers.CharField(max_length=3, required=True)
     amount = serializers.DecimalField(max_digits=20, decimal_places=2, required=True)
+    
+    def validate_from_currency(self, value):
+        return value.upper()
+    
+    def validate_to_currency(self, value):
+        return value.upper()

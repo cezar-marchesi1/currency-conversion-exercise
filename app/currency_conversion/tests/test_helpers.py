@@ -1,14 +1,23 @@
 from django.test import TestCase
-from rest_framework.test import APIClient
-from rest_framework import status
-from django.urls import reverse
+from currency_conversion import helpers
 
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 
-class HelpersTests(TestCase):
-    def setUp(self):
-        pass
+class HelpersTests(TestCase):    
 
-    def test_helpers(self):
-        self.assertTrue(True)
+    @patch('currency_conversion.helpers.Client')
+    def test_convert_currency_is_successful(self, mock_client):
+        mock_rates = {
+            "data": {
+                "BRL": {"value": 4.5}
+            }
+        }
+     
+        mock_client_instance = Mock()
+        mock_client_instance.latest.return_value = mock_rates
+        mock_client.return_value = mock_client_instance
+
+        result = helpers.convert_currency(100, "USD", "BRL")
+
+        self.assertEqual(result, 450.0)
